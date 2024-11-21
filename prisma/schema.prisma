@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,15 +7,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  USER
-}
-
 model User {
   id       String   @id @default(cuid())
   email    String   @unique
   password String
+  role     String   @default("USER")  // Changed from enum to string temporarily
   reviews  Review[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Profile {
@@ -28,6 +24,8 @@ model Profile {
   lastName  String
   bio       String
   picture   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Spot {
@@ -54,10 +52,13 @@ model Review {
   id        String   @id @default(cuid())
   rating    Int
   comment   String?
-  spot      Spot     @relation(fields: [spotId], references: [id])
+  spot      Spot     @relation(fields: [spotId], references: [id], onDelete: Cascade)
   spotId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([spotId])
+  @@index([userId])
 }
