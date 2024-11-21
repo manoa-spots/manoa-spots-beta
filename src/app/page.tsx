@@ -1,21 +1,65 @@
-import { Col, Container, Image, Row } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
+import { PageIDs } from '@/utilities/ids';
+import SpotCard from '@/components/SpotCard';
+import prisma from '@/app/lib/prisma';
+import type { Spot } from '@prisma/client';
 
-/** The Home page. */
-const Home = () => (
-  <main>
-    <Container id="landing-page" fluid className="py-3">
-      <Row className="align-middle text-center">
-        <Col xs={4}>
-          <Image src="next.svg" width="150px" alt="" />
-        </Col>
+async function getSpots(): Promise<(Spot & { _count: { reviews: number } })[]> {
+  return prisma.spot.findMany({
+    include: {
+      _count: {
+        select: { reviews: true },
+      },
+    },
+  });
+}
 
-        <Col xs={8} className="d-flex flex-column justify-content-center">
-          <h1>Welcome to this template</h1>
-          <p>Now get to work and modify this app!</p>
-        </Col>
-      </Row>
-    </Container>
-  </main>
-);
+export default async function Home() {
+  try {
+    const spots = await getSpots();
 
-export default Home;
+    return (
+      <main>
+        <div id={PageIDs.landingPage}>
+          <div className="landing-hero">
+            <Container className="text-center landing-hero">
+              <h1
+                style={{
+                  fontSize: '36pt',
+                  fontWeight: '600',
+                  color: 'var(--primary-dark)',
+                }}
+              >
+                find your perfect spot!
+              </h1>
+            </Container>
+          </div>
+          <div>
+            <Container
+              className="landing-white-background justify-content-center text-center"
+              style={{ backgroundColor: 'white' }}
+            >
+              <h2 className="trending">trending spots</h2>
+              <Container className="py-5">
+                <Row xs={1} md={2} lg={3} className="g-4">
+                  {spots.map((spot) => (
+                    <Col key={spot.id}>
+                      <SpotCard spot={spot} />
+                    </Col>
+                  ))}
+                </Row>
+              </Container>
+            </Container>
+          </div>
+        </div>
+      </main>
+    );
+  } catch (error) {
+    console.error('Error fetching spots:', error);
+    return (
+      <main>
+        <div>Error loading spots. Please try again later.</div>
+      </main>
+    );
+  }
+}

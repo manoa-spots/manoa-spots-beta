@@ -1,45 +1,63 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  // for local development
   url      = env("DATABASE_URL")
-  // for Vercel
-  // url       = env("POSTGRES_PRISMA_URL")
-  // directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 enum Role {
   USER
-  ADMIN
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
+  id       String   @id @default(cuid())
+  email    String   @unique
   password String
-  role     Role   @default(USER)
+  reviews  Review[]
 }
 
-enum Condition {
-  excellent
-  good
-  fair
-  poor
+model Profile {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  firstName String
+  lastName  String
+  bio       String
+  picture   String
 }
 
-model Stuff {
-  id        Int       @id @default(autoincrement())
-  name      String
-  quantity  Int
-  condition Condition
-  owner     String
+model Spot {
+  id            String   @id @default(cuid())
+  name          String   @unique
+  description   String?
+  imageUrl      String
+  rating        Float    @default(0)
+  numReviews    Int      @default(0)
+  address       String
+  latitude      Float
+  longitude     Float
+  hasOutlets    Boolean  @default(false)
+  hasParking    Boolean  @default(false)
+  hasFoodDrinks Boolean  @default(false)
+  maxGroupSize  Int      @default(1)
+  type          String
+  reviews       Review[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int
+  comment   String?
+  spot      Spot     @relation(fields: [spotId], references: [id])
+  spotId    String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

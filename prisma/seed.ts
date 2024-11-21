@@ -1,4 +1,4 @@
-import { PrismaClient, Role, Condition } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { hash } from 'bcrypt';
 import * as config from '../config/settings.development.json';
 
@@ -6,50 +6,131 @@ const prisma = new PrismaClient();
 
 async function main() {
   console.log('Seeding the database');
-  const password = await hash('changeme', 10);
-  config.defaultAccounts.forEach(async (account) => {
-    let role: Role = 'USER';
-    if (account.role === 'ADMIN') {
-      role = 'ADMIN';
-    }
-    console.log(`  Creating user: ${account.email} with role: ${role}`);
-    await prisma.user.upsert({
-      where: { email: account.email },
+
+  // Clear existing data
+  await prisma.review.deleteMany();
+  await prisma.spot.deleteMany();
+
+  // Create spots
+  console.log('Creating spots...');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const spots = await Promise.all([
+    prisma.spot.upsert({
+      where: { name: 'Hamilton Library' },
       update: {},
       create: {
-        email: account.email,
-        password,
-        role,
+        name: 'Hamilton Library',
+        description: 'Quiet study space with multiple floors',
+        imageUrl: 'https://www.hawaii.edu/news/wp-content/uploads/2020/10/manoa-hamilton-library-signs.jpg',
+        rating: 4.5,
+        numReviews: 125,
+        address: '2550 McCarthy Mall, Honolulu, HI 96822',
+        latitude: 21.3001,
+        longitude: -157.8161,
+        hasOutlets: true,
+        hasParking: true,
+        hasFoodDrinks: false,
+        maxGroupSize: 6,
+        type: 'LIBRARY',
       },
-    });
-    // console.log(`  Created user: ${user.email} with role: ${user.role}`);
-  });
-  config.defaultData.forEach(async (data, index) => {
-    let condition: Condition = 'good';
-    if (data.condition === 'poor') {
-      condition = 'poor';
-    } else if (data.condition === 'excellent') {
-      condition = 'excellent';
-    } else {
-      condition = 'fair';
-    }
-    console.log(`  Adding stuff: ${data.name} (${data.owner})`);
-    await prisma.stuff.upsert({
-      where: { id: index + 1 },
+    }),
+    prisma.spot.upsert({
+      where: { name: 'Sinclair Library' },
       update: {},
       create: {
-        name: data.name,
-        quantity: data.quantity,
-        owner: data.owner,
-        condition,
+        name: 'Sinclair Library',
+        description: '24/7 study space with comfortable seating',
+        imageUrl:
+          'https://historichawaii.org/wp-content/uploads/2014/02/'
+          + 'Oahu_Honolulu_CampusRoad_2425_photo_byIanClagstone.jpg',
+        rating: 3.2,
+        numReviews: 89,
+        address: '2425 Campus Rd, Honolulu, HI 96822',
+        latitude: 21.2999,
+        longitude: -157.8190,
+        hasOutlets: true,
+        hasParking: true,
+        hasFoodDrinks: true,
+        maxGroupSize: 4,
+        type: 'LIBRARY',
       },
-    });
-  });
+    }),
+    prisma.spot.upsert({
+      where: { name: 'Walter Dods, Jr. RISE Center' },
+      update: {},
+      create: {
+        name: 'Island Brew Coffee House',
+        description: 'Good coffee and pastries with indoor seating',
+        imageUrl:
+          'https://www.islandbrewcoffeehouse.com/uploads/1/3/7/0/13708134/ffea10a9-7143-47ff'
+          + '-99aa-3726e676211f_orig.jpeg',
+        rating: 5.0,
+        numReviews: 20,
+        address: '1810 University Ave, Honolulu, HI 96822',
+        latitude: 21.2999,
+        longitude: -157.8190,
+        hasOutlets: true,
+        hasParking: false,
+        hasFoodDrinks: true,
+        maxGroupSize: 4,
+        type: 'CAFE',
+      },
+    }),
+  ]);
+
+  console.log('Spots created successfully');
+
+  // Hash password once
+  const hashedPassword = await hash('foo', 10);
+
+  // Create profiles
+  console.log('Creating profiles...');
+  await Promise.all(
+    config.defaultProfiles.map(async (profile) => {
+      try {
+        console.log(`  Creating/Updating profile ${profile.email}`);
+
+        // Create user and profile concurrently
+        await Promise.all([
+          prisma.user.upsert({
+            where: { email: profile.email },
+            update: { password: hashedPassword },
+            create: {
+              email: profile.email,
+              password: hashedPassword,
+            },
+          }),
+          prisma.profile.upsert({
+            where: { email: profile.email },
+            update: {
+              firstName: profile.firstName,
+              lastName: profile.lastName,
+              bio: profile.bio || '',
+              picture: profile.picture || '',
+            },
+            create: {
+              email: profile.email,
+              firstName: profile.firstName,
+              lastName: profile.lastName,
+              bio: profile.bio || '',
+              picture: profile.picture || '',
+            },
+          }),
+        ]);
+      } catch (error) {
+        console.error(`Error creating profile for ${profile.email}:`, error);
+      }
+    }),
+  );
+
+  console.log('Seeding completed');
 }
+
 main()
-  .then(() => prisma.$disconnect())
-  .catch(async (e) => {
+  .catch((e) => {
     console.error(e);
-    await prisma.$disconnect();
     process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
   });
