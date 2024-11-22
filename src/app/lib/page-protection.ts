@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { Role } from '@prisma/client';
+import Role from '@/types/prisma';
 
 // Define a proper session type
 type Session = {
