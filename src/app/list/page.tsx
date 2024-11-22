@@ -1,9 +1,10 @@
 import { getServerSession } from 'next-auth';
 import { Col, Container, Row, Table } from 'react-bootstrap';
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/app/lib/prisma';
 import StuffItem from '@/components/StuffItem';
 import { loggedInProtectedPage } from '@/app/lib/page-protection';
 import authOptions from '@/app/lib/authOptions';
+import Role from '@/types/prisma';
 
 /** Render a list of stuff for the logged in user. */
 const ListPage = async () => {
@@ -11,7 +12,7 @@ const ListPage = async () => {
   const session = await getServerSession(authOptions);
   loggedInProtectedPage(
     session as {
-      user: { email: string; id: string; randomKey: string };
+      user: { email: string; id: string; role: Role };
       // eslint-disable-next-line @typescript-eslint/comma-dangle
     } | null,
   );
