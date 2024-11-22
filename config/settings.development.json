@@ -24,13 +24,6 @@
       "lastName": "Doe",
       "bio": "Regular user",
       "picture": ""
-    },
-    {
-      "email": "jane@foo.com",
-      "firstName": "Jane",
-      "lastName": "Doe",
-      "bio": "Another regular user",
-      "picture": ""
     }
   ]
 }

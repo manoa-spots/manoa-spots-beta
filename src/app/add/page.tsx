@@ -1,6 +1,6 @@
 import { getServerSession } from 'next-auth';
-import authOptions from '@/lib/authOptions';
-import { loggedInProtectedPage } from '@/lib/page-protection';
+import authOptions from '@/app/lib/authOptions';
+import { loggedInProtectedPage } from '@/app/lib/page-protection';
 import AddStuffForm from '@/components/AddStuffForm';
 
 const AddStuff = async () => {

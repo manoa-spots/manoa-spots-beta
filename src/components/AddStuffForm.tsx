@@ -6,9 +6,9 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import swal from 'sweetalert';
 import { redirect } from 'next/navigation';
-import { addStuff } from '@/lib/dbActions';
+import { addStuff } from '@/app/lib/dbActions';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { AddStuffSchema } from '@/lib/validationSchemas';
+import { AddStuffSchema } from '@/app/lib/validationSchemas';
 
 const onSubmit = async (data: { name: string; quantity: number; owner: string; condition: string }) => {
   // console.log(`onSubmit data: ${JSON.stringify(data, null, 2)}`);

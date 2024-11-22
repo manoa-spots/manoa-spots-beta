@@ -1,8 +1,8 @@
 import { Container, Row, Col } from 'react-bootstrap';
 import { PageIDs } from '@/utilities/ids';
 import SpotCard from '@/components/SpotCard';
-import prisma from '@/app/lib/prisma';
 import type { Spot } from '@prisma/client';
+import { prisma } from '@/app/lib/prisma';
 
 async function getSpots(): Promise<(Spot & { _count: { reviews: number } })[]> {
   return prisma.spot.findMany({

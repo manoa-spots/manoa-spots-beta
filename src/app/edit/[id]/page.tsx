@@ -1,8 +1,8 @@
 import { getServerSession } from 'next-auth';
 import { notFound } from 'next/navigation';
 import { Stuff } from '@prisma/client';
-import authOptions from '@/lib/authOptions';
-import { loggedInProtectedPage } from '@/lib/page-protection';
+import authOptions from '@/app/lib/authOptions';
+import { loggedInProtectedPage } from '@/app/lib/page-protection';
 import { prisma } from '@/lib/prisma';
 import EditStuffForm from '@/components/EditStuffForm';
 

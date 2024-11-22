@@ -5,8 +5,8 @@ import { useForm } from 'react-hook-form';
 import swal from 'sweetalert';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Stuff } from '@prisma/client';
-import { EditStuffSchema } from '@/lib/validationSchemas';
-import { editStuff } from '@/lib/dbActions';
+import { EditStuffSchema } from '@/app/lib/validationSchemas';
+import { editStuff } from '@/app/lib/dbActions';
 
 const onSubmit = async (data: Stuff) => {
   // console.log(`onSubmit data: ${JSON.stringify(data, null, 2)}`);
