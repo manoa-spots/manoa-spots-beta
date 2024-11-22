@@ -5,7 +5,8 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { Card, Col, Container, Button, Form, Row } from 'react-bootstrap';
-import { createUser } from '@/lib/dbActions';
+import { createUser } from '@/app/lib/dbActions';
+import router from 'next/router';
 
 type SignUpForm = {
   email: string;
@@ -41,6 +42,7 @@ const SignUp = () => {
     await createUser(data);
     // After creating, signIn with redirect to the add page
     await signIn('credentials', { callbackUrl: '/add', ...data });
+    router.push('/home');
   };
 
   return (
