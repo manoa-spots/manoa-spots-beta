@@ -63,32 +63,21 @@ const NavBar: React.FC = () => {
                 id={ComponentIDs.homeMenuItem}
                 active={pathname === '/home'}
                 href="/home"
-                key="home"
               >
                 home
               </Nav.Link>
             )}
             <Nav.Link
-              id={ComponentIDs.profilesMenuItem}
-              active={pathname === '/home'}
-              href="/home"
-              key="home"
-            >
-              home
-            </Nav.Link>
-            <Nav.Link
               id={ComponentIDs.projectsMenuItem}
               active={pathname === '/map'}
               href="/map"
-              key="map"
             >
               map
             </Nav.Link>
             <Nav.Link
-              id={ComponentIDs.projectsMenuItem}
-              active={pathname === '/addspot'}
-              href="/addspot"
-              key="addspot"
+              id={ComponentIDs.addSpotMenuItem}
+              active={pathname === '/add'}
+              href="/add"
             >
               add spot
             </Nav.Link>

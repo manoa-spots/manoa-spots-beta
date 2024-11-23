@@ -7,6 +7,7 @@ export const ComponentIDs = {
   addProjectFormInterests: 'addProjectFormInterests',
   addProjectFormParticipants: 'addProjectFormParticipants',
   addProjectFormSubmit: 'addProjectFormSubmit',
+  addSpotMenuItem: 'add-spot-menu-item',
   basicNavbarNav: 'basicNavbarNav',
   currentUserDropdown: 'currentUserDropdown',
   currentUserDropdownSignOut: 'currentUserDropdownSignOut',
@@ -22,6 +23,7 @@ export const ComponentIDs = {
   loginDropdown: 'loginDropdown',
   loginDropdownSignIn: 'loginDropdownSignIn',
   loginDropdownSignUp: 'loginDropdownSignUp',
+  mapMenuItem: 'map-menu-item',
   profilesMenuItem: 'profilesMenuItem',
   projectsMenuItem: 'projectsMenuItem',
   signInFormEmail: 'signInFormEmail',
@@ -34,6 +36,7 @@ export const ComponentIDs = {
 
 export const PageIDs = {
   addProjectPage: 'addProjectPage',
+  addSpotPage: 'addSpotPage', // Added this line
   filterPage: 'filterPage',
   homePage: 'homePage',
   interestsPage: 'interestsPage',
