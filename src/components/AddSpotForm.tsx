@@ -65,19 +65,19 @@ const AddSpotForm = () => {
 
   const onSubmit = async (data: SpotFormData) => {
     try {
-      const response = await fetch('/api/auth/[...nextauth]/spots', {
+      const response = await fetch('/api/spots', {  // Simplified URL
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
       });
-
+  
       if (!response.ok) {
         throw new Error('Failed to add spot');
       }
-
-      await response.json();
+  
+      const result = await response.json();
       swal('Success', 'Your spot has been added', 'success', {
         timer: 2000,
       });

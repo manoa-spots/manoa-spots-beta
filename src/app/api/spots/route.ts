@@ -1,19 +1,21 @@
-// src/app/api/auth/[...nextauth]/spots/route.ts
+// src/app/api/spots/route.ts
 import { NextResponse } from 'next/server';
+import prisma from '@/app/lib/prisma';
 import { getServerSession } from 'next-auth';
-import { prisma } from '@/app/lib/prisma';
+import authOptions from '@/app/lib/authOptions';
 
-// Since the spots route is nested under auth, we can assume authentication is required
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: Request) {
   try {
-    const session = await getServerSession();
-
+    const session = await getServerSession(authOptions);
+    
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const data = await request.json();
-
+    
     const spot = await prisma.spot.create({
       data: {
         name: data.name,
@@ -27,8 +29,8 @@ export async function POST(request: Request) {
         hasFoodDrinks: data.hasFoodDrinks,
         maxGroupSize: data.maxGroupSize,
         type: data.type,
-        rating: 0, // Default values as per your schema
-        numReviews: 0, // Default values as per your schema
+        rating: 0,
+        numReviews: 0,
       },
     });
 
@@ -37,31 +39,25 @@ export async function POST(request: Request) {
     console.error('Error creating spot:', error);
     return NextResponse.json(
       { error: 'Error creating spot' },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
 
 export async function GET() {
   try {
-    const session = await getServerSession();
-
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     const spots = await prisma.spot.findMany({
       orderBy: {
-        createdAt: 'desc',
-      },
+        createdAt: 'desc'
+      }
     });
-
+    
     return NextResponse.json(spots);
   } catch (error) {
     console.error('Error fetching spots:', error);
     return NextResponse.json(
       { error: 'Error fetching spots' },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
