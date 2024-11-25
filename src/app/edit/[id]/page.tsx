@@ -5,6 +5,7 @@ import { loggedInProtectedPage } from '@/app/lib/page-protection';
 import { prisma } from '@/app/lib/prisma';
 import EditStuffForm from '@/components/EditStuffForm';
 import Role from '@/types/prisma';
+import { Stuff } from '@prisma/client';
 
 export default async function EditStuffPage({ params }: { params: { id: string | string[] } }) {
   // Protect the page, only logged in users can access it.

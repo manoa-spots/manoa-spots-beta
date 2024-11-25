@@ -65,18 +65,18 @@ const AddSpotForm = () => {
 
   const onSubmit = async (data: SpotFormData) => {
     try {
-      const response = await fetch('/api/spots', {  // Simplified URL
+      const response = await fetch('/api/spots', { // Simplified URL
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to add spot');
       }
-  
+
       const result = await response.json();
       swal('Success', 'Your spot has been added', 'success', {
         timer: 2000,
@@ -94,7 +94,6 @@ const AddSpotForm = () => {
   if (status === 'unauthenticated') {
     redirect('/auth/signin');
   }
-
 
   return (
     <Card className="add-spot-card">
@@ -200,24 +199,24 @@ const AddSpotForm = () => {
                 <Col md={4}>
                   <Form.Check
                     type="checkbox"
-                    label={
+                    label={(
                       <span className="checkbox-label">
                         <ParkingCircle size={18} />
                         Has Parking
                       </span>
-                    }
+                    )}
                     {...register('hasParking')}
                   />
                 </Col>
                 <Col md={4}>
                   <Form.Check
                     type="checkbox"
-                    label={
+                    label={(
                       <span className="checkbox-label">
                         <Coffee size={18} />
                         Has Food/Drinks
                       </span>
-                    }
+                    )}
                     {...register('hasFoodDrinks')}
                   />
                 </Col>
@@ -245,8 +244,8 @@ const AddSpotForm = () => {
               <Col md={6}>
                 <Form.Group className="mb-3">
                   <Form.Label>Type</Form.Label>
-                  <select 
-                    {...register('type')} 
+                  <select
+                    {...register('type')}
                     className={`form-control ${errors.type ? 'is-invalid' : ''}`}
                   >
                     <option value="">Select a type...</option>
@@ -279,16 +278,16 @@ const AddSpotForm = () => {
 
           {/* Submit Buttons */}
           <div className="d-flex justify-content-end gap-2">
-            <Button 
-              type="button" 
+            <Button
+              type="button"
               variant="outline-secondary"
               onClick={() => reset()}
               className="reset-button"
             >
               Reset
             </Button>
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               className="submit-button"
             >
               Add Spot

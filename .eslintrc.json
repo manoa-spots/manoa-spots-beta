@@ -16,7 +16,7 @@
     "no-return-assign": "off",
     "object-curly-newline": "off",
     "prefer-arrow-callback": "off",
-    "ignoreDependencies": ["lucide-react"],
+    "ignoreDependencies": ["off"],
     "import/no-extraneous-dependencies": [
       "error", 
       { 
